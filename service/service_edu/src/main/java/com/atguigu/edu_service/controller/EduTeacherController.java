@@ -140,8 +140,8 @@ public class EduTeacherController {
      * @return
      */
     @ApiOperation(value = "通过讲师id来查询讲师信息")
-    @GetMapping("/getTeacherDetailById")
-    public ResultResponse getTeacherDetailById(@RequestParam
+    @GetMapping("/getTeacherDetailById/{id}")
+    public ResultResponse getTeacherDetailById(@PathVariable
                                                @ApiParam(name = "id",value = "讲师id编号",required = true)
                                                            String id) {
         EduTeacher eduTeacher = eduTeacherService.queryTeacherDetailById(id);
