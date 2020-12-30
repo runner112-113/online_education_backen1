@@ -2,6 +2,7 @@ package com.atguigu.service.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.OSSObject;
 import com.atguigu.service.OssService;
 import com.atguigu.utils.OssConstantsUtil;
@@ -10,39 +11,60 @@ import org.apache.poi.xwpf.usermodel.Document;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.xmlbeans.XmlOptions;
+import org.joda.time.DateTime;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OssServiceImpl implements OssService {
 
     @Override
-    public String uploadFile2Oss(MultipartFile file) {
+    public String uploadFileAvatar2Oss(MultipartFile file) {
 
          String endPoint = OssConstantsUtil.END_POINT;
          String accesskeyId = OssConstantsUtil.ACCESSKEY_ID;
          String accessKeySecret = OssConstantsUtil.ACCESS_KEY_SECRET;
          String bucketName = OssConstantsUtil.BUCKET_NAME;
 
-        //获取文件名
-        String fileName = file.getOriginalFilename();
-
         //创建OssClient实例
         OSS ossClient = new OSSClientBuilder().build(endPoint, accesskeyId, accessKeySecret);
+
+        //判断bucket是否存在，不存在就创建
+        if (!ossClient.doesBucketExist(bucketName)) {
+            //创建bucket
+            ossClient.createBucket(bucketName);
+            //设置oss实例的访问权限：公共读
+            ossClient.setBucketAcl(bucketName, CannedAccessControlList.PublicRead);
+        }
 
         //上传文件流
         try {
             InputStream inputStream = file.getInputStream();
-            ossClient.putObject(bucketName,fileName,inputStream);
+
+            //构建日期路径：avatar/2019/02/26/文件名
+            String filePath = new DateTime().toString("yyyy/MM/dd");
+
+            //文件名：uuid.扩展名(包含扩展名)
+            String original = file.getOriginalFilename();
+            //获取随机数作为fileName
+            String fileName = UUID.randomUUID().toString();
+            //获取文件的扩展名
+            String fileType = original.substring(original.lastIndexOf("."));
+            //通过使用随机数和扩展名拼接成新的文件名
+            String newName = fileName + fileType;
+            //通过日期创建文件夹
+            String fileUrl =  filePath + "/" + newName;
+            //调用oss方法实现上传
+            //第一个参数：Bucket名称
+            //第二个参数：上传到oss的文件路径和文件名称   /aa/bb1.jpg
+            //第三个参数：上传文件输入流
+            ossClient.putObject(bucketName,fileUrl,inputStream);
             //  https://edu1129.oss-cn-beijing.aliyuncs.com/8470181.jpg
-            String url = "https://" + bucketName + "." + endPoint + "/" + fileName;
+            String url = "https://" + bucketName + "." + endPoint + "/" + fileUrl;
             return url;
         } catch (IOException e) {
             e.printStackTrace();

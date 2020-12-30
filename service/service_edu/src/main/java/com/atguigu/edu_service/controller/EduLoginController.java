@@ -3,7 +3,6 @@ package com.atguigu.edu_service.controller;
 import com.atguigu.commonutils.utils.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.web.bind.annotation.*;
 
 @Api(description = "登录控制层")

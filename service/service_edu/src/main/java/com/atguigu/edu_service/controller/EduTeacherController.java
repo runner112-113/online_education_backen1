@@ -145,7 +145,6 @@ public class EduTeacherController {
                                                @ApiParam(name = "id",value = "讲师id编号",required = true)
                                                            String id) {
         EduTeacher eduTeacher = eduTeacherService.queryTeacherDetailById(id);
-        int i = 1/0;
         return ResultResponse.ok().data("item",eduTeacher);
     }
 
