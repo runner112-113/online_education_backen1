@@ -63,7 +63,12 @@ public class SubjectEventListener extends AnalysisEventListener<EduSubjectDto> {
 
     }
 
-    //判断一级课程是否已经存在了
+    /**
+     * 判断一级课程是否已经存在了
+     * @param eduSubjectService
+     * @param firstSubjectName
+     * @return
+     */
     private EduSubject exitFirstSubject(IEduSubjectService eduSubjectService,String firstSubjectName) {
         LambdaQueryWrapper<EduSubject> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EduSubject::getTitle,firstSubjectName)
@@ -71,7 +76,13 @@ public class SubjectEventListener extends AnalysisEventListener<EduSubjectDto> {
         return eduSubjectService.getOne(wrapper);
     }
 
-    //判断一级课程是否已经存在了
+    /**
+     * 判断二级课程是否已经存在了
+     * @param eduSubjectService
+     * @param secondSubjectName
+     * @param pid
+     * @return
+     */
     private EduSubject exitSecondSubject(IEduSubjectService eduSubjectService,String secondSubjectName,String pid) {
         LambdaQueryWrapper<EduSubject> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EduSubject::getTitle,secondSubjectName)
