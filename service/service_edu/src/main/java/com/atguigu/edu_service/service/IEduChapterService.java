@@ -1,7 +1,10 @@
 package com.atguigu.edu_service.service;
 
 import com.atguigu.edu_service.entity.EduChapter;
+import com.atguigu.edu_service.entity.vo.ChapterVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEduChapterService extends IService<EduChapter> {
 
+    List<ChapterVo> getChapterAndVideoByCourseId(String courseId);
+
+    boolean deleteChapterById(String chapterId);
 }
